@@ -1,6 +1,8 @@
 import numpy as np, cv2, time, os
 from cmu_112_graphics import *
 
+#please go to the end of the code for the citations
+
 # shrek = cv2.imread("images/shrek.png", 1)
 # shrekBlur = cv2.GaussianBlur(shrek, (7, 7), (0))
 # kernel = np.ones((5, 5), np.uint8)
@@ -23,12 +25,14 @@ def timerFired(app):
 
 def appStopped(app):
     app.testVid.release()
+    # cv2.destroyAllWindows()
 
 def redrawAll(app, canvas):
     canvas.create_text(app.width/2, app.height/2, text = str(app.isBlue))
 
 def finalSingularBlue(app):
     test, image = app.testVid.read()
+    image = cv2.flip(image, 1)
     areaList = []
     hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
     lowBlue = np.array([110,50,50])
@@ -52,6 +56,7 @@ def singularBlue(app):
     app.testVid = cv2.VideoCapture(0)
     while testVid.isOpened():
         test, image = testVid.read()
+        image = cv2.flip(image, 1)
         areaList = []
         hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
         lowBlue = np.array([110,50,50])
@@ -87,9 +92,15 @@ def blueDetection():
     while True:
         test, image = testVid.read()
         areaList = []
+        image = cv2.flip(image, 1)
         # print(testVid.isOpened())
         # image = cv2.Canny(image, 100, 100)
         # image = cv2.dilate(image, kernel, iterations = 1)
+        # green_lower = np.array([25, 52, 72], np.uint8)
+        # green_upper = np.array([102, 255, 255], np.uint8)
+        # red_lower = np.array([136, 87, 111], np.uint8)
+        # red_upper = np.array([180, 255, 255], np.uint8)
+
         hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
         lowBlue = np.array([110,50,50])
         upBlue = np.array([130,255,255])
@@ -112,10 +123,10 @@ def blueDetection():
                             cv2.FONT_HERSHEY_SIMPLEX, 1.0,
                             (0, 0, 255))
 
-        if areaList!=[] and max(areaList)>7000:
-            print(True)
-        else:
-            print(False)
+        # if areaList!=[] and max(areaList)>7000:
+        #     print(True)
+        # else:
+        #     print(False)
         # b = res[:, :, :1]
         # g = res[:, :, 1:2]
         # r = res[:, :, 2:]
@@ -141,6 +152,21 @@ def blueDetection():
     cv2.destroyAllWindows()
 
 # blueDetection()
-runApp(width=400, height=400)
+# runApp(width=400, height=400)
 
+"""
+Citations:
+OpenCV code for loading image - https://www.youtube.com/watch?v=WQeoO7MI0Bs
 
+learning how to use the webcam :
+https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_gui/py_video_display/py_video_display.html
+did not copy the code, understood the code first and then wrote it myself
+
+configuring vscode to access the webcam :
+https://rajathithanrajasekar.medium.com/opencv-series-2-configure-vscode-for-opencv-development-in-macos-4a2a06e144fa
+
+detecting colors in opencv:
+https://www.geeksforgeeks.org/multiple-color-detection-in-real-time-using-python-opencv/
+a large part of blueDetection() is copied from this website
+singularBlue() and finalSingularBlue() were written from scratch 
+"""
