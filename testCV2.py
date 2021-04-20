@@ -35,18 +35,20 @@ def finalSingularBlue(app):
     image = cv2.flip(image, 1)
     areaList = []
     hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
-    lowBlue = np.array([110,50,50])
-    upBlue = np.array([130,255,255])
-    mask = cv2.inRange(hsv, lowBlue, upBlue)
+    lowYellow = np.array([16, 100, 100])
+    upYellow = np.array([32, 255, 255])
+    # lowBlue = np.array([110,50,50])
+    # upBlue = np.array([130,255,255])
+    mask = cv2.inRange(hsv, lowYellow, upYellow)
     kernel = np.ones((5, 5), np.uint8)
     mask = cv2.dilate(mask, kernel)
     res = cv2.bitwise_and(image, image, mask=mask)
     contours, hierarchy = cv2.findContours(mask, cv2.RETR_TREE, 
                                             cv2.CHAIN_APPROX_SIMPLE)
-    for pic, contour in enumerate(contours):
+    for contour in contours:
         area = cv2.contourArea(contour)
         areaList.append(area)
-    if areaList!=[] and max(areaList)>7000:
+    if areaList!=[] and max(areaList)>10000:
         app.isBlue = True
     else:
         app.isBlue = False
@@ -85,6 +87,7 @@ def singularBlue(app):
     cv2.destroyAllWindows()
     
 def blueDetection():
+    # a large part of this was copied
     check = False
     testVid = cv2.VideoCapture(0)
     # testVid.set(3, 640)
@@ -117,7 +120,7 @@ def blueDetection():
         for pic, contour in enumerate(contours):
             area = cv2.contourArea(contour)
             areaList.append(area)
-            if area>7000:
+            if area>10000:
                 x, y, w, h = cv2.boundingRect(contour)
                 image = cv2.rectangle(image, (x, y), 
                                         (x + w, y + h), 
