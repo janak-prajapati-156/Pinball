@@ -50,6 +50,7 @@ def finalSingularBlue(app):
         app.isBlue = True
     else:
         app.isBlue = False
+    cv2.imshow("output", image)
 
 def singularBlue(app):
     app.isBlue = False
@@ -100,8 +101,10 @@ def blueDetection():
         # green_upper = np.array([102, 255, 255], np.uint8)
         # red_lower = np.array([136, 87, 111], np.uint8)
         # red_upper = np.array([180, 255, 255], np.uint8)
-
+        # (0-179 degrees (360), 0-255 saturation (100%), 0-255 value (100%))
         hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+        # lowYellow = np.array([16, 100, 100])
+        # upYellow = np.array([32, 255, 255])
         lowBlue = np.array([110,50,50])
         upBlue = np.array([130,255,255])
         mask = cv2.inRange(hsv, lowBlue, upBlue)

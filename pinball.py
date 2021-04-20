@@ -9,7 +9,9 @@ import testCV2
 def appStarted(app):
     app.isBlue = False
     app.testVid = cv2.VideoCapture(0)
-    app.r = 50
+    # app.testVid.set(3, 650)
+    # app.testVid.set(4, 450)
+    app.r = 30
     app.cx = random.randint(app.r, app.width-app.r)
     app.cy = random.randint(app.r, app.height-app.r)
     app.dx = 2
@@ -28,8 +30,6 @@ def inCircle(app, x1, y1):
 def mousePressed(app, event):
     pass
 
-def doStep(app):
-    pass
 
 def isInFrame(app):
     if (app.cx+app.r>=app.width or app.cx-app.r<=0):
@@ -39,14 +39,15 @@ def isInFrame(app):
 
 def timerFired(app):
     testCV2.finalSingularBlue(app)
+    isInFrame(app)
     if app.isBlue:
         app.cx += app.dx
         app.cy += app.dy
-    isInFrame(app)
+    
 
 def appStopped(app):
     app.testVid.release()
-    # cv2.destroyAllWindows()
+    cv2.destroyAllWindows()
 
 def drawCircle(app, canvas):
     canvas.create_oval(app.cx-app.r, app.cy-app.r, app.cx+app.r, app.cy+app.r,
