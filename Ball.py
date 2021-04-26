@@ -69,3 +69,11 @@ def redrawAll(app, canvas):
     drawCircle(app, canvas)
 
 runApp(width = 650, height = 450)
+
+"""
+TokyoEdtech. “Python Bouncing Ball Simulator 2.” YouTube, 12 June 2018, www.youtube.com/watch?v=ibdICVK0W3Q. Accessed 26 Apr. 2021.
+
+‌“Projectile Motion Formula.” 101 Computing, 3 July 2014, www.101computing.net/projectile-motion-formula/. Accessed 26 Apr. 2021.
+
+‌
+"""
