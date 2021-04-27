@@ -18,6 +18,9 @@ def appStarted(app):
     app.dx = 0
     app.dy = 0
     app.sX, app.sY = 1, 1
+    app.mass = 0.4
+    # app.kEn = 0.5*app.mass*app.vi*app.vi
+    # app.pEn = app.mass*app.g*app.height/2
     app.flag = False
 
 def updateVx(app):
