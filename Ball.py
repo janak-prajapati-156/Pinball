@@ -3,65 +3,86 @@ from cmu_112_graphics import *
 #ball file
 
 def appStarted(app):
-    app.r = 30
+    initialConditions(app)
+    app.timerDelay = 1
+
+def initialConditions(app):
+    app.r = 20
     app.x0 = app.width/2
     app.y0 = app.height/2
-    app.vi = 0
-    app.angle = 90
-    app.vx = app.vi * math.cos(math.radians(app.angle))
-    app.vy = app.vi * math.sin(math.radians(app.angle))
-    app.ax = 0
-    app.ay = 13
-    app.dt = 0.05
-    app.time = 0
-    app.startTime = time.time()
+    app.vi = 1 # initial velocity
+    app.angle = math.radians(0)
+    app.yVel = app.vi * math.sin(app.angle)
+    app.xVel = app.vi * math.cos(app.angle)
     app.dx = 0
     app.dy = 0
-    app.sX, app.sY = 1, 1
-    app.mass = 0.4
-    # app.kEn = 0.5*app.mass*app.vi*app.vi
-    # app.pEn = app.mass*app.g*app.height/2
-    app.flag = False
-
-def updateVx(app):
-    app.vx = app.vx + app.sX*(app.ax*app.dt)
-    return app.vx
-
-def updateVy(app):
-    app.vy = app.vy + app.sY*(app.ay*app.dt)
-    return app.vy
-
-def updateX(app):
-    app.dx = ((updateVx(app)*app.time) + (0.5*app.ax*app.time*app.time))
-    app.x0 += app.dx
-
-def updateY(app):
-    app.dy = ((updateVy(app)*app.time) + (0.5*app.ay*app.time*app.time))
-    app.y0 += app.dy
+    app.gravity = 0.0098 # gravity in m/ms since timerDelay is 1ms
+    app.coeff_restitution = 0.94 # "bounciness" after a collision
+    app.ballPos = []
+    app.rectPos = [app.r, app.r, app.r*5, app.r*5]
 
 def keyPressed(app, event):
     if event.key=='x':
-        app.flag = not app.flag
-    if event.key=='s':
-        app.vi *= 2
+        print(getAngle(app))
 
-def inCircle(app, x1, y1):
-    return math.sqrt((app.x0-x1)**2 + (app.y0-y1)**2) < app.r
+def updateBall(app):
+    #update ball is called every one second so standard m/s calc can be made
+    app.dx = app.xVel
+    #x-direction isn't affected by gravity
+    app.yVel += app.gravity
+    #since the y-cord are inverted in canvas, we add the gravity to the vel
+    app.dy = app.yVel
+    #change per second is the new velocity
+    app.x0 += app.dx
+    app.y0 += app.dy
+    isInFrame(app)
+    app.ballPos.append((app.x0, app.y0))
+    if len(app.ballPos)>2:
+        app.ballPos.pop(0)
+
+def isColliding(app):
+    xR1, yR1, xR2, yR2 = app.restPos
+    if xR1<=app.x0<=xR2 and yR1<=app.y0<=yR2:
+        angle = getAngle(app)
+
+
+# def stopBall(app):
+#     if app.yVel < 1 and 
 
 def isInFrame(app):
-    if (app.x0+app.r>=app.width or app.x0-app.r<=0):
-        app.vx = -app.vx
-    if app.y0+app.r>=app.height or app.y0-app.r<=0:
-        app.sY = -1
+    if app.x0+app.r>app.width: 
+        #right
+        app.xVel *= -app.coeff_restitution
+        app.x0 = app.width-app.r
+    if app.x0-app.r<0:
+        #left
+        app.xVel *= -app.coeff_restitution
+        app.x0 = app.r
+    if app.y0-app.r<0: 
+        #top
+        app.yVel *= -app.coeff_restitution
+        app.y0 = app.r
+    if app.y0+app.r>app.height: 
+        #bottom
+        app.yVel *= -app.coeff_restitution
+        app.y0 = app.height-app.r
+
+def getAngle(app):
+    x1, y1 = app.ballPos[0]
+    x2, y2 = app.ballPos[1]
+    slope = (y2-y1)/(x2-x1)
+    angle = math.degrees(math.atan(slope))
+    return angle
+
 
 def timerFired(app):
-    if app.flag: return
-    if time.time()-app.startTime > app.dt:
-        isInFrame(app)
-        app.time += app.dt
-        updateX(app)
-        updateY(app)
-        app.startTime = time.time()
+    updateBall(app)
+
+# def appStopped(app):
+#     getAngle(app)
+
+def drawCollisionBox(app, canvas):
+    canvas.create_rectangle(app.r, app.r, app.r*5, app.r*5, fill = "blue")
 
 def drawCircle(app, canvas):
     canvas.create_oval(app.x0-app.r, app.y0-app.r, 
@@ -70,6 +91,7 @@ def drawCircle(app, canvas):
 
 def redrawAll(app, canvas):
     drawCircle(app, canvas)
+    drawCollisionBox(app, canvas)
 
 runApp(width = 650, height = 450)
 
