@@ -11,8 +11,8 @@ def initialConditions(app):
     app.r = 5
     app.x0 = app.width/2
     app.y0 = app.height/2
-    app.vi = 3 # initial velocity
-    app.angle = math.radians(70)
+    app.vi = 0 # initial velocity
+    app.angle = math.radians(30)
     app.yVel = app.vi * math.sin(app.angle)
     app.xVel = app.vi * math.cos(app.angle)
     app.dx = 0
@@ -20,7 +20,9 @@ def initialConditions(app):
     app.gravity = 0.0098 # gravity in m/ms^2 since timerDelay is 1ms
     app.coeff_restitution = 0.94 # "bounciness" after a collision
     app.ballPos = [(app.width/2, app.height/2)]
+    app.objectList = []
     app.triPos = [(150, 100), (250, 160), (50, 160)]
+    app.rectPos = [(400, 400), (450, 400), (450, 450), (400, 450)]
 
 def keyPressed(app, event):
     if event.key=='x':
@@ -34,7 +36,6 @@ def updateBall(app):
         app.ballPos.pop(0)
     flag, x1, y1, x2, y2 = isColliding(app)
     if flag:
-        print(x1, y1, x2, y2, app.x0, app.y0)
         vectorCalc(app, x1, y1, x2, y2)
         doStep(app)
 
@@ -49,29 +50,36 @@ def doStep(app):
     app.y0 += app.dy
 
 def distBetweenLineBall(app, x1, y1, x2, y2):
-    a = 1
-    b, c = getEquationOfLine(x1, y1, x2, y2)
-    return abs((b*app.x0) + (a*app.y0) + (c)) / math.sqrt((a*a) + (b*b))
+    b = 1
+    a, c = getEquationOfLine(x1, y1, x2, y2)
+    # print(((abs(a * app.x0 + b * app.y0 + c)) / math.sqrt(a * a + b * b)))
+    return ((abs(a * app.x0 + b * app.y0 + c)) / math.sqrt(a * a + b * b))
 
 def getEquationOfLine(x1, y1, x2, y2):
     slope = (y2-y1)/(x2-x1)
-    constant = (slope*(0-x1) + y1)
-    return slope, -constant
+    constant = y1-(slope*x1)
+    # print(-slope, -constant)
+    return -slope, -constant
 
 def isLineBallColliding(app, x1, y1, x2, y2):
-    return ((distBetweenLineBall(app, x1, y1, x2, y2) <= app.r) 
-            and ((min(x1, x2)-app.r)<app.x0<(max(x1, x2)+app.r))
-            and ((min(y1, y2)-app.r)<app.y0<(max(y1, y2)+app.r)))
+    r = app.r
+    return ((distBetweenLineBall(app, x1, y1, x2, y2) <= r) 
+            and ((min(x1, x2)-r)<app.x0<(max(x1, x2)+r))
+            and ((min(y1, y2)-r)<app.y0<(max(y1, y2)+r)))
 
 def isColliding(app):
     for i in range(len(app.triPos)-1):
+        # if i==0:
+            # continue
         x1, y1 = app.triPos[i]
         x2, y2 = app.triPos[i+1]
         if isLineBallColliding(app, x1, y1, x2, y2):
+            print(True, x1, y1, x2, y2, app.x0, app.y0)
             return (True, x1, y1, x2, y2)
     x1, y1 = app.triPos[0]
     x2, y2 = app.triPos[-1]
     if isLineBallColliding(app, x1, y1, x2, y2):
+            print(True, x1, y1, x2, y2, app.x0, app.y0)
             return (True, x1, y1, x2, y2)
     return (False, 0, 0, 0, 0)
     
@@ -105,6 +113,7 @@ def isInFrame(app):
 #     return angle
 
 def vectorCalc(app, x1, y1, x2, y2):
+    y1, y2 = -y1, -y2
     xNorm = -math.sin(math.atan((y2-y1)/(x2-x1)))
     yNorm = -math.cos(math.atan((y2-y1)/(x2-x1)))
     normBallDot = (app.xVel * xNorm) + (app.yVel * yNorm)

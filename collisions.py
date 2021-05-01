@@ -39,3 +39,59 @@ def orientation(x1, y1, x2, y2, x3, y3):
         return 'clockwise'
     else:
         return 'linear'
+
+# def distBetweenLineBall(x1, y1, x2, y2):
+#     x0, y0 = 205.18945729465946, 128.6059654642178
+#     b = 1
+#     a, c = getEquationOfLine(x1, y1, x2, y2)
+#     print(((abs(a * x0 + b * y0 + c)) / math.sqrt(a * a + b * b)))
+#     return ((abs(a * x0 + b * y0 + c)) / math.sqrt(a * a + b * b))
+
+# def getEquationOfLine(x1, y1, x2, y2):
+#     slope = (y2-y1)/(x2-x1)
+#     constant = y1-(slope*x1)
+#     print(-slope, -constant)
+#     return -slope, -constant
+
+# def isLineBallColliding(x1, y1, x2, y2):
+#     r = 20
+#     x0, y0 = 205.18945729465946, 128.6059654642178
+#     return ((distBetweenLineBall(x1, y1, x2, y2) <= r) 
+#             and ((min(x1, x2)-r)<x0<(max(x1, x2)+r))
+#             and ((min(y1, y2)-r)<y0<(max(y1, y2)+r)))
+
+# print(isLineBallColliding(150, 100, 250, 160))
+
+
+# def vectorCalc():
+#     # angle = -45
+#     vx, vy = 0, 1
+#     x1, y1, x2, y2 = 0, 0, 1, -1
+#     # nx = -math.sin(math.radians(angle))
+#     # ny = -math.cos(math.radians(angle))
+#     nx = -math.sin(math.atan((y2-y1)/(x2-x1)))
+#     ny = -math.cos(math.atan((y2-y1)/(x2-x1)))
+#     dot = vx * nx + vy * ny
+#     vnewx = vx - (2 * dot * nx)
+#     vnewy = vy - (2 * dot * ny)
+#     print(nx, ny)
+#     print(vx, vy)
+#     print(vnewx, vnewy)
+
+# vectorCalc()
+
+
+# def getAngle(x1, y1, x2, y2):
+#     # x1, x2, y1, y2 = 150, 100, 250, 160
+#     slope = (y2-y1)/(x2-x1)
+#     angle = math.degrees(math.atan(slope))
+#     return angle
+
+# # print(getAngle(150, -100, 250, -160))
+
+# def vectorCalc2(x1, y1, x2, y2):
+#     xNorm = -math.sin(math.atan((y2-y1)/(x2-x1)))
+#     yNorm = -math.cos(math.atan((y2-y1)/(x2-x1)))
+#     normBallDot = (app.xVel * xNorm) + (app.yVel * yNorm)
+#     xVel -= (2 * normBallDot * xNorm)
+#     yVel -= (2 * normBallDot * yNorm)
