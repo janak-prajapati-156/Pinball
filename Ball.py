@@ -1,5 +1,6 @@
 import numpy as np, cv2, math, random, time
 from cmu_112_graphics import *
+import collisions
 #ball file
 
 def appStarted(app):
@@ -7,26 +8,37 @@ def appStarted(app):
     app.timerDelay = 1
 
 def initialConditions(app):
-    app.r = 20
+    app.r = 5
     app.x0 = app.width/2
     app.y0 = app.height/2
-    app.vi = 1 # initial velocity
-    app.angle = math.radians(0)
+    app.vi = 3 # initial velocity
+    app.angle = math.radians(70)
     app.yVel = app.vi * math.sin(app.angle)
     app.xVel = app.vi * math.cos(app.angle)
     app.dx = 0
     app.dy = 0
-    app.gravity = 0.0098 # gravity in m/ms since timerDelay is 1ms
+    app.gravity = 0.0098 # gravity in m/ms^2 since timerDelay is 1ms
     app.coeff_restitution = 0.94 # "bounciness" after a collision
-    app.ballPos = []
-    app.rectPos = [app.r, app.r, app.r*5, app.r*5]
+    app.ballPos = [(app.width/2, app.height/2)]
+    app.triPos = [(150, 100), (250, 160), (50, 160)]
 
 def keyPressed(app, event):
     if event.key=='x':
-        print(getAngle(app))
-
+        doStep(app)
+    
 def updateBall(app):
-    #update ball is called every one second so standard m/s calc can be made
+    doStep(app)
+    isInFrame(app)
+    app.ballPos.append((app.x0+app.r, app.y0+app.r))
+    if len(app.ballPos)>2:
+        app.ballPos.pop(0)
+    flag, x1, y1, x2, y2 = isColliding(app)
+    if flag:
+        print(x1, y1, x2, y2, app.x0, app.y0)
+        vectorCalc(app, x1, y1, x2, y2)
+        doStep(app)
+
+def doStep(app):
     app.dx = app.xVel
     #x-direction isn't affected by gravity
     app.yVel += app.gravity
@@ -35,15 +47,35 @@ def updateBall(app):
     #change per second is the new velocity
     app.x0 += app.dx
     app.y0 += app.dy
-    isInFrame(app)
-    app.ballPos.append((app.x0, app.y0))
-    if len(app.ballPos)>2:
-        app.ballPos.pop(0)
+
+def distBetweenLineBall(app, x1, y1, x2, y2):
+    a = 1
+    b, c = getEquationOfLine(x1, y1, x2, y2)
+    return abs((b*app.x0) + (a*app.y0) + (c)) / math.sqrt((a*a) + (b*b))
+
+def getEquationOfLine(x1, y1, x2, y2):
+    slope = (y2-y1)/(x2-x1)
+    constant = (slope*(0-x1) + y1)
+    return slope, -constant
+
+def isLineBallColliding(app, x1, y1, x2, y2):
+    return ((distBetweenLineBall(app, x1, y1, x2, y2) <= app.r) 
+            and ((min(x1, x2)-app.r)<app.x0<(max(x1, x2)+app.r))
+            and ((min(y1, y2)-app.r)<app.y0<(max(y1, y2)+app.r)))
 
 def isColliding(app):
-    xR1, yR1, xR2, yR2 = app.restPos
-    if xR1<=app.x0<=xR2 and yR1<=app.y0<=yR2:
-        angle = getAngle(app)
+    for i in range(len(app.triPos)-1):
+        x1, y1 = app.triPos[i]
+        x2, y2 = app.triPos[i+1]
+        if isLineBallColliding(app, x1, y1, x2, y2):
+            return (True, x1, y1, x2, y2)
+    x1, y1 = app.triPos[0]
+    x2, y2 = app.triPos[-1]
+    if isLineBallColliding(app, x1, y1, x2, y2):
+            return (True, x1, y1, x2, y2)
+    return (False, 0, 0, 0, 0)
+    
+
 
 
 # def stopBall(app):
@@ -67,22 +99,30 @@ def isInFrame(app):
         app.yVel *= -app.coeff_restitution
         app.y0 = app.height-app.r
 
-def getAngle(app):
-    x1, y1 = app.ballPos[0]
-    x2, y2 = app.ballPos[1]
-    slope = (y2-y1)/(x2-x1)
-    angle = math.degrees(math.atan(slope))
-    return angle
+# def getAngle(x1, y1, x2, y2):
+#     slope = (y2-y1)/(x2-x1)
+#     angle = math.degrees(math.atan(slope))
+#     return angle
+
+def vectorCalc(app, x1, y1, x2, y2):
+    xNorm = -math.sin(math.atan((y2-y1)/(x2-x1)))
+    yNorm = -math.cos(math.atan((y2-y1)/(x2-x1)))
+    normBallDot = (app.xVel * xNorm) + (app.yVel * yNorm)
+    app.xVel -= (2 * normBallDot * xNorm)
+    app.yVel -= (2 * normBallDot * yNorm)
+
+
+    
 
 
 def timerFired(app):
     updateBall(app)
 
 # def appStopped(app):
-#     getAngle(app)
+#     pass
 
 def drawCollisionBox(app, canvas):
-    canvas.create_rectangle(app.r, app.r, app.r*5, app.r*5, fill = "blue")
+    canvas.create_polygon(app.triPos, fill = "blue")
 
 def drawCircle(app, canvas):
     canvas.create_oval(app.x0-app.r, app.y0-app.r, 
