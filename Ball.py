@@ -11,7 +11,7 @@ def initialConditions(app):
     app.r = 6
     app.x0 = app.width/2
     app.y0 = app.height/2
-    app.vi = 4 # initial velocity
+    app.vi = 6 # initial velocity
     app.angle = math.radians(30)
     app.yVel = app.vi * math.sin(app.angle)
     app.xVel = app.vi * math.cos(app.angle)
@@ -27,8 +27,6 @@ def initialConditions(app):
     app.objectList.append(app.triPos)
     app.objectList.append(app.paraPos)
     app.objectList.append(app.rectPos)
-    for points in app.objectList:
-        print(points)
 
 def keyPressed(app, event):
     if event.key=='x':

@@ -109,4 +109,4 @@ def vectorCalc2(x1, y1, x2, y2):
     yVel -= (2 * normBallDot * yNorm)
     print(xVel, yVel)
 
-vectorCalc2(0, 0, 0, 1)
+# vectorCalc2(0, 0, 0, 1)
