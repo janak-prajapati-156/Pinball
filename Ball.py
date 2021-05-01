@@ -11,8 +11,8 @@ def initialConditions(app):
     app.r = 6
     app.x0 = app.width/2
     app.y0 = app.height/2
-    app.vi = 6 # initial velocity
-    app.angle = math.radians(30)
+    app.vi = 5.2 # initial velocity
+    app.angle = math.radians(45)
     app.yVel = app.vi * math.sin(app.angle)
     app.xVel = app.vi * math.cos(app.angle)
     app.dx = 0
@@ -21,7 +21,7 @@ def initialConditions(app):
     app.coeff_restitution = 0.94 # "bounciness" after a collision
     app.ballPos = [(app.width/2, app.height/2)]
     app.objectList = []
-    app.triPos = [(150, 100), (250, 160), (50, 160)]
+    app.triPos = [(150, 100), (250, 220), (50, 160)]
     app.paraPos = [(500, 100), (550, 150), (500, 200), (450, 150)]
     app.rectPos = [(400, 400), (450, 400), (450, 440), (400, 440)]
     app.objectList.append(app.triPos)
@@ -84,12 +84,12 @@ def isColliding(app):
             x1, y1 = points[i]
             x2, y2 = points[i+1]
             if isLineBallColliding(app, x1, y1, x2, y2):
-                print(True, x1, y1, x2, y2, app.x0, app.y0)
+                # print(True, x1, y1, x2, y2, app.x0, app.y0)
                 return (True, x1, y1, x2, y2)
         x1, y1 = points[0]
         x2, y2 = points[-1]
         if isLineBallColliding(app, x1, y1, x2, y2):
-                print(True, x1, y1, x2, y2, app.x0, app.y0)
+                # print(True, x1, y1, x2, y2, app.x0, app.y0)
                 return (True, x1, y1, x2, y2)
     return (False, 0, 0, 0, 0)
     
