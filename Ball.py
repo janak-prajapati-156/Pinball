@@ -22,8 +22,10 @@ def initialConditions(app):
     app.ballPos = [(app.width/2, app.height/2)]
     app.objectList = []
     app.triPos = [(150, 100), (250, 160), (50, 160)]
-    app.rectPos = [(400, 300), (450, 370), (400, 420), (350, 370)]
+    app.paraPos = [(500, 100), (550, 150), (500, 200), (450, 150)]
+    app.rectPos = [(400, 400), (450, 400), (450, 440), (400, 440)]
     app.objectList.append(app.triPos)
+    app.objectList.append(app.paraPos)
     app.objectList.append(app.rectPos)
     for points in app.objectList:
         print(points)
@@ -54,8 +56,12 @@ def doStep(app):
     app.y0 += app.dy
 
 def distBetweenLineBall(app, x1, y1, x2, y2):
-    b = 1
-    a, c = getEquationOfLine(x1, y1, x2, y2)
+    if x1==x2:
+        b = 0
+        a, c = -1, x1
+    else:
+        b = 1
+        a, c = getEquationOfLine(x1, y1, x2, y2)
     # print(((abs(a * app.x0 + b * app.y0 + c)) / math.sqrt(a * a + b * b)))
     return ((abs(a * app.x0 + b * app.y0 + c)) / math.sqrt(a * a + b * b))
 
@@ -70,6 +76,9 @@ def isLineBallColliding(app, x1, y1, x2, y2):
     return ((distBetweenLineBall(app, x1, y1, x2, y2) <= r) 
             and ((min(x1, x2)-r)<app.x0<(max(x1, x2)+r))
             and ((min(y1, y2)-r)<app.y0<(max(y1, y2)+r)))
+
+def lineIsVertical(app):
+    pass
 
 def isColliding(app):
     for points in app.objectList:
@@ -117,8 +126,12 @@ def isInFrame(app):
 
 def vectorCalc(app, x1, y1, x2, y2):
     y1, y2 = -y1, -y2
-    xNorm = -math.sin(math.atan((y2-y1)/(x2-x1)))
-    yNorm = -math.cos(math.atan((y2-y1)/(x2-x1)))
+    if x1==x2:
+        slope = math.radians(270)
+    else:
+        slope = math.atan((y2-y1)/(x2-x1))
+    xNorm = -math.sin(slope)
+    yNorm = -math.cos(slope)
     normBallDot = (app.xVel * xNorm) + (app.yVel * yNorm)
     app.xVel -= (2 * normBallDot * xNorm)
     app.yVel -= (2 * normBallDot * yNorm)

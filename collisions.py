@@ -40,27 +40,31 @@ def orientation(x1, y1, x2, y2, x3, y3):
     else:
         return 'linear'
 
-# def distBetweenLineBall(x1, y1, x2, y2):
-#     x0, y0 = 205.18945729465946, 128.6059654642178
-#     b = 1
-#     a, c = getEquationOfLine(x1, y1, x2, y2)
-#     print(((abs(a * x0 + b * y0 + c)) / math.sqrt(a * a + b * b)))
-#     return ((abs(a * x0 + b * y0 + c)) / math.sqrt(a * a + b * b))
+def distBetweenLineBall(x1, y1, x2, y2):
+    x0, y0 = 400, 400
+    if x1==x2:
+        b = 0
+        a, c = -1, 400
+    else:
+        b = 1
+        a, c = getEquationOfLine(x1, y1, x2, y2)
+    print(((abs(a * x0 + b * y0 + c)) / math.sqrt(a * a + b * b)))
+    return ((abs(a * x0 + b * y0 + c)) / math.sqrt(a * a + b * b))
 
-# def getEquationOfLine(x1, y1, x2, y2):
-#     slope = (y2-y1)/(x2-x1)
-#     constant = y1-(slope*x1)
-#     print(-slope, -constant)
-#     return -slope, -constant
+def getEquationOfLine(x1, y1, x2, y2):
+    slope = (y2-y1)/(x2-x1)
+    constant = y1-(slope*x1)
+    print(-slope, -constant)
+    return -slope, -constant
 
-# def isLineBallColliding(x1, y1, x2, y2):
-#     r = 20
-#     x0, y0 = 205.18945729465946, 128.6059654642178
-#     return ((distBetweenLineBall(x1, y1, x2, y2) <= r) 
-#             and ((min(x1, x2)-r)<x0<(max(x1, x2)+r))
-#             and ((min(y1, y2)-r)<y0<(max(y1, y2)+r)))
+def isLineBallColliding(x1, y1, x2, y2):
+    r = 20
+    x0, y0 = 400, 400
+    return ((distBetweenLineBall(x1, y1, x2, y2) <= r) 
+            and ((min(x1, x2)-r)<x0<(max(x1, x2)+r))
+            and ((min(y1, y2)-r)<y0<(max(y1, y2)+r)))
 
-# print(isLineBallColliding(150, 100, 250, 160))
+# print(isLineBallColliding(400, 400, 400, 450))
 
 
 # def vectorCalc():
@@ -89,9 +93,20 @@ def orientation(x1, y1, x2, y2, x3, y3):
 
 # # print(getAngle(150, -100, 250, -160))
 
-# def vectorCalc2(x1, y1, x2, y2):
-#     xNorm = -math.sin(math.atan((y2-y1)/(x2-x1)))
-#     yNorm = -math.cos(math.atan((y2-y1)/(x2-x1)))
-#     normBallDot = (app.xVel * xNorm) + (app.yVel * yNorm)
-#     xVel -= (2 * normBallDot * xNorm)
-#     yVel -= (2 * normBallDot * yNorm)
+def vectorCalc2(x1, y1, x2, y2):
+    if x1==x2:
+        slope = math.radians(270)
+    else:
+        slope = math.atan((y2-y1)/(x2-x1))
+    
+    xVel, yVel = 1, 0
+    xNorm = -math.sin(slope)
+    yNorm = -math.cos(slope)
+    print(xNorm, yNorm)
+    print(xVel, yVel)
+    normBallDot = (xVel * xNorm) + (yVel * yNorm)
+    xVel -= (2 * normBallDot * xNorm)
+    yVel -= (2 * normBallDot * yNorm)
+    print(xVel, yVel)
+
+vectorCalc2(0, 0, 0, 1)
