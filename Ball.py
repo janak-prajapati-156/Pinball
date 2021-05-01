@@ -8,10 +8,10 @@ def appStarted(app):
     app.timerDelay = 1
 
 def initialConditions(app):
-    app.r = 5
+    app.r = 6
     app.x0 = app.width/2
     app.y0 = app.height/2
-    app.vi = 0 # initial velocity
+    app.vi = 4 # initial velocity
     app.angle = math.radians(30)
     app.yVel = app.vi * math.sin(app.angle)
     app.xVel = app.vi * math.cos(app.angle)
@@ -22,7 +22,11 @@ def initialConditions(app):
     app.ballPos = [(app.width/2, app.height/2)]
     app.objectList = []
     app.triPos = [(150, 100), (250, 160), (50, 160)]
-    app.rectPos = [(400, 400), (450, 400), (450, 450), (400, 450)]
+    app.rectPos = [(400, 300), (450, 370), (400, 420), (350, 370)]
+    app.objectList.append(app.triPos)
+    app.objectList.append(app.rectPos)
+    for points in app.objectList:
+        print(points)
 
 def keyPressed(app, event):
     if event.key=='x':
@@ -68,19 +72,18 @@ def isLineBallColliding(app, x1, y1, x2, y2):
             and ((min(y1, y2)-r)<app.y0<(max(y1, y2)+r)))
 
 def isColliding(app):
-    for i in range(len(app.triPos)-1):
-        # if i==0:
-            # continue
-        x1, y1 = app.triPos[i]
-        x2, y2 = app.triPos[i+1]
+    for points in app.objectList:
+        for i in range(len(points)-1):
+            x1, y1 = points[i]
+            x2, y2 = points[i+1]
+            if isLineBallColliding(app, x1, y1, x2, y2):
+                print(True, x1, y1, x2, y2, app.x0, app.y0)
+                return (True, x1, y1, x2, y2)
+        x1, y1 = points[0]
+        x2, y2 = points[-1]
         if isLineBallColliding(app, x1, y1, x2, y2):
-            print(True, x1, y1, x2, y2, app.x0, app.y0)
-            return (True, x1, y1, x2, y2)
-    x1, y1 = app.triPos[0]
-    x2, y2 = app.triPos[-1]
-    if isLineBallColliding(app, x1, y1, x2, y2):
-            print(True, x1, y1, x2, y2, app.x0, app.y0)
-            return (True, x1, y1, x2, y2)
+                print(True, x1, y1, x2, y2, app.x0, app.y0)
+                return (True, x1, y1, x2, y2)
     return (False, 0, 0, 0, 0)
     
 
@@ -131,7 +134,8 @@ def timerFired(app):
 #     pass
 
 def drawCollisionBox(app, canvas):
-    canvas.create_polygon(app.triPos, fill = "blue")
+    for points in app.objectList:
+        canvas.create_polygon(points, fill = "blue")
 
 def drawCircle(app, canvas):
     canvas.create_oval(app.x0-app.r, app.y0-app.r, 
