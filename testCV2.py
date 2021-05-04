@@ -21,11 +21,12 @@ def appStarted(app):
     # singularBlue(app)
 
 def timerFired(app):
-    finalSingularBlue(app)
+    # finalSingularBlue(app)
+    pass
 
 def appStopped(app):
     app.testVid.release()
-    # cv2.destroyAllWindows()
+    cv2.destroyAllWindows()
 
 def redrawAll(app, canvas):
     canvas.create_text(app.width/2, app.height/2, text = str(app.isBlue))
@@ -102,15 +103,18 @@ def blueDetection():
         # image = cv2.dilate(image, kernel, iterations = 1)
         # green_lower = np.array([25, 52, 72], np.uint8)
         # green_upper = np.array([102, 255, 255], np.uint8)
-        # red_lower = np.array([136, 87, 111], np.uint8)
-        # red_upper = np.array([180, 255, 255], np.uint8)
+        red_lower = np.array([136, 87, 111], np.uint8)
+        red_upper = np.array([180, 255, 255], np.uint8)
         # (0-179 degrees (360), 0-255 saturation (100%), 0-255 value (100%))
         hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
         # lowYellow = np.array([16, 100, 100])
         # upYellow = np.array([32, 255, 255])
-        lowBlue = np.array([110,50,50])
-        upBlue = np.array([130,255,255])
-        mask = cv2.inRange(hsv, lowBlue, upBlue)
+        lowOrange = np.array([5, 50, 50])
+        upOrange = np.array([15, 255, 255])
+        mask = cv2.inRange(hsv, red_lower, red_upper)
+        # lowBlue = np.array([110,50,50])
+        # upBlue = np.array([130,255,255])
+        # mask = cv2.inRange(hsv, lowBlue, upBlue)
         kernel = np.ones((5, 5), np.uint8)
         mask = cv2.dilate(mask, kernel)
         res = cv2.bitwise_and(image, image, mask=mask)
@@ -157,7 +161,7 @@ def blueDetection():
     testVid.release()
     cv2.destroyAllWindows()
 
-# blueDetection()
+blueDetection()
 # runApp(width=400, height=400)
 
 """

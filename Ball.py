@@ -9,6 +9,7 @@ import collisions, objects
 
 def initialConditions(app):
     playWidth = app.width*4.5/7
+    app.gameOver = False
     app.r = 6
     app.x0 = playWidth/2
     app.y0 = app.height/2
@@ -132,8 +133,9 @@ def isInFrame(app):
         app.y0 = app.r
     if app.y0+app.r>app.height: 
         #bottom
-        app.yVel *= -app.coeff_restitution
-        app.y0 = app.height-app.r
+        # app.yVel *= -app.coeff_restitution
+        # app.y0 = app.height-app.r
+        app.gameOver = True
 
 # def getAngle(x1, y1, x2, y2):
 #     slope = (y2-y1)/(x2-x1)
