@@ -1,15 +1,16 @@
 import numpy as np, cv2, math, random, time
 from cmu_112_graphics import *
-import collisions
+import collisions, objects
 #ball file
 
-def appStarted(app):
-    initialConditions(app)
-    app.timerDelay = 1
+# def appStarted(app):
+#     initialConditions(app)
+#     app.timerDelay = 1
 
 def initialConditions(app):
+    playWidth = app.width*4.5/7
     app.r = 6
-    app.x0 = app.width/2
+    app.x0 = playWidth/2
     app.y0 = app.height/2
     app.vi = 5.2 # initial velocity
     app.angle = math.radians(45)
@@ -19,18 +20,18 @@ def initialConditions(app):
     app.dy = 0
     app.gravity = 0.0098 # gravity in m/ms^2 since timerDelay is 1ms
     app.coeff_restitution = 0.94 # "bounciness" after a collision
-    app.ballPos = [(app.width/2, app.height/2)]
-    app.objectList = []
-    app.triPos = [(150, 100), (250, 220), (50, 160)]
-    app.paraPos = [(500, 100), (550, 150), (500, 200), (450, 150)]
-    app.rectPos = [(400, 400), (450, 400), (450, 440), (400, 440)]
-    app.objectList.append(app.triPos)
-    app.objectList.append(app.paraPos)
-    app.objectList.append(app.rectPos)
+    app.ballPos = [(playWidth/2, app.height/2)]
+    # app.objectList = []
+    # app.triPos = [(150, 100), (250, 220), (50, 160)]
+    # app.paraPos = [(500, 100), (550, 150), (500, 200), (450, 150)]
+    # app.rectPos = [(400, 400), (450, 400), (450, 440), (400, 440)]
+    # app.objectList.append(app.triPos)
+    # app.objectList.append(app.paraPos)
+    # app.objectList.append(app.rectPos)
 
-def keyPressed(app, event):
-    if event.key=='x':
-        doStep(app)
+# def keyPressed(app, event):
+#     if event.key=='x':
+#         doStep(app)
     
 def updateBall(app):
     doStep(app)
@@ -75,23 +76,39 @@ def isLineBallColliding(app, x1, y1, x2, y2):
             and ((min(x1, x2)-r)<app.x0<(max(x1, x2)+r))
             and ((min(y1, y2)-r)<app.y0<(max(y1, y2)+r)))
 
-def lineIsVertical(app):
-    pass
+# def lineIsVertical(app):
+#     pass
 
 def isColliding(app):
-    for points in app.objectList:
-        for i in range(len(points)-1):
-            x1, y1 = points[i]
-            x2, y2 = points[i+1]
+    for item in app.objectDict:
+        for points in app.objectDict[item]:
+            for i in range(len(points)-1):
+                x1, y1 = points[i]
+                x2, y2 = points[i+1]
+                if isLineBallColliding(app, x1, y1, x2, y2):
+                    # print(True, x1, y1, x2, y2, app.x0, app.y0)
+                    return (True, x1, y1, x2, y2)
+            x1, y1 = points[0]
+            x2, y2 = points[-1]
             if isLineBallColliding(app, x1, y1, x2, y2):
-                # print(True, x1, y1, x2, y2, app.x0, app.y0)
-                return (True, x1, y1, x2, y2)
-        x1, y1 = points[0]
-        x2, y2 = points[-1]
-        if isLineBallColliding(app, x1, y1, x2, y2):
-                # print(True, x1, y1, x2, y2, app.x0, app.y0)
-                return (True, x1, y1, x2, y2)
+                    # print(True, x1, y1, x2, y2, app.x0, app.y0)
+                    return (True, x1, y1, x2, y2)
     return (False, 0, 0, 0, 0)
+
+# def isColliding(app):
+#     for points in app.objectList:
+#         for i in range(len(points)-1):
+#             x1, y1 = points[i]
+#             x2, y2 = points[i+1]
+#             if isLineBallColliding(app, x1, y1, x2, y2):
+#                 # print(True, x1, y1, x2, y2, app.x0, app.y0)
+#                 return (True, x1, y1, x2, y2)
+#         x1, y1 = points[0]
+#         x2, y2 = points[-1]
+#         if isLineBallColliding(app, x1, y1, x2, y2):
+#                 # print(True, x1, y1, x2, y2, app.x0, app.y0)
+#                 return (True, x1, y1, x2, y2)
+#     return (False, 0, 0, 0, 0)
     
 
 
@@ -100,10 +117,11 @@ def isColliding(app):
 #     if app.yVel < 1 and 
 
 def isInFrame(app):
-    if app.x0+app.r>app.width: 
+    playWidth = app.width*4.5/7
+    if app.x0+app.r>playWidth: 
         #right
         app.xVel *= -app.coeff_restitution
-        app.x0 = app.width-app.r
+        app.x0 = playWidth-app.r
     if app.x0-app.r<0:
         #left
         app.xVel *= -app.coeff_restitution
@@ -138,31 +156,23 @@ def vectorCalc(app, x1, y1, x2, y2):
     
 
 
-def timerFired(app):
-    updateBall(app)
+# def timerFired(app):
+#     updateBall(app)
 
 # def appStopped(app):
 #     pass
 
-def drawCollisionBox(app, canvas):
-    for points in app.objectList:
-        canvas.create_polygon(points, fill = "blue")
+# def drawCollisionBox(app, canvas):
+#     for points in app.objectList:
+#         canvas.create_polygon(points, fill = "blue")
 
 def drawCircle(app, canvas):
     canvas.create_oval(app.x0-app.r, app.y0-app.r, 
                                     app.x0+app.r, app.y0+app.r,
                                     fill = "red")
 
-def redrawAll(app, canvas):
-    drawCircle(app, canvas)
-    drawCollisionBox(app, canvas)
+# def redrawAll(app, canvas):
+#     drawCircle(app, canvas)
+#     drawCollisionBox(app, canvas)
 
-runApp(width = 650, height = 450)
-
-"""
-TokyoEdtech. “Python Bouncing Ball Simulator 2.” YouTube, 12 June 2018, www.youtube.com/watch?v=ibdICVK0W3Q. Accessed 26 Apr. 2021.
-
-‌“Projectile Motion Formula.” 101 Computing, 3 July 2014, www.101computing.net/projectile-motion-formula/. Accessed 26 Apr. 2021.
-
-‌
-"""
+# runApp(width = 650, height = 450)
