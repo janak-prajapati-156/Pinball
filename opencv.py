@@ -13,9 +13,9 @@ def initialCV(app):
     app.testVid = cv2.VideoCapture(0)
 
 
-def timerFired(app):
-    finalSingularRed(app)
-    finalSingularBlue(app)
+# def timerFired(app):
+#     finalSingularRed(app)
+#     finalSingularBlue(app)
 
 # def appStopped(app):
 #     app.testVid.release()
@@ -41,6 +41,7 @@ def finalSingularBlue(app):
         app.isBlue = True
     else:
         app.isBlue = False
+    cv2.imshow("output", image)
 
 def finalSingularRed(app):
     test, image = app.testVid.read()
@@ -62,5 +63,5 @@ def finalSingularRed(app):
         app.isRed = True
     else:
         app.isRed = False
+    cv2.imshow("output", image)
 
-# runApp(width = 400, height = 600)

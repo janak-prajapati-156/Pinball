@@ -5,8 +5,8 @@ import testCV2
 def appStarted(app):
     app.isBlue = False
     app.testVid = cv2.VideoCapture(0)
-    app.testVid.set(3, 650)
-    app.testVid.set(4, 450)
+    # app.testVid.set(3, 650)
+    # app.testVid.set(4, 450)
 
 def keyPressed(app, event):
     pass
