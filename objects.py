@@ -23,11 +23,11 @@ def initialisePoints(app):
     ]  
     app.objectDict['flipper'] = [
         [(playWidth*1.75/9, app.height*7.08/8), 
-            (playWidth*2.25/5, app.height*7.5/8), 
+            (playWidth*2.25/5, app.height*7.5/8), (playWidth*2.25/5, app.height*7.68/8),
             (playWidth*1.75/9, app.height*7.26/8)],
 
         [(playWidth*7.25/9, app.height*7.08/8), 
-            (playWidth*2.75/5, app.height*7.5/8), 
+            (playWidth*2.75/5, app.height*7.5/8), (playWidth*2.75/5, app.height*7.68/8), 
             (playWidth*7.25/9, app.height*7.26/8)]
     ]
     app.objectDict['triangularBox'] = [

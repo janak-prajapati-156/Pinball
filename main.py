@@ -15,7 +15,6 @@ def startGame(app):
     app.currH = app.height*6.66/8
     app.currH2 = app.height*6.66/8
     app.diffH = (app.newH-app.oldH)/15
-    app.iterateH = np.linspace(app.height*6.66/8, app.height*7.26/8, num=50)
 
 def appStopped(app):
     app.testVid.release()
@@ -32,6 +31,8 @@ def keyPressed(app, event):
     if event.key=='Space' and app.spaceCount<1:
         app.gameOver = False
         app.spaceCount+=1
+    if event.key=='q':
+        app.gameOver = True
 
 def keyReleased(app, event):
     playWidth = app.width*4.5/7
@@ -46,26 +47,26 @@ def flipperMoveFinal(app):
         if app.currH<app.newH:
             app.currH += app.diffH
             app.objectDict['flipper'][1] = [(playWidth*7.25/9, app.height*7.08/8), 
-            (playWidth*2.75/5, app.currH), 
+            (playWidth*2.75/5, app.currH), (playWidth*2.75/5, app.currH + app.height*.18/8),
             (playWidth*7.15/9, app.height*7.26/8)]
     else:
         if app.currH>app.oldH:
             app.currH -= app.diffH
             app.objectDict['flipper'][1] = [(playWidth*7.25/9, app.height*7.08/8), 
-            (playWidth*2.75/5, app.currH), 
+            (playWidth*2.75/5, app.currH), (playWidth*2.75/5, app.currH+ app.height*.18/8),
             (playWidth*7.15/9, app.height*7.26/8)]
 
     if not app.isRed:
         if app.currH2<app.newH:
             app.currH2 += app.diffH
             app.objectDict['flipper'][0] = [(playWidth*1.75/9, app.height*7.08/8), 
-                (playWidth*2.25/5, app.currH2), 
+                (playWidth*2.25/5, app.currH2), (playWidth*2.25/5, app.currH2 + app.height*.18/8),
                 (playWidth*1.85/9, app.height*7.26/8)]
     else:
         if app.currH2>app.oldH:
             app.currH2 -= app.diffH
             app.objectDict['flipper'][0] = [(playWidth*1.75/9, app.height*7.08/8), 
-                (playWidth*2.25/5, app.currH2), 
+                (playWidth*2.25/5, app.currH2), (playWidth*2.25/5, app.currH2 + app.height*.18/8),
                 (playWidth*1.75/9, app.height*7.26/8)]
 
 # def flipperMove(app):
@@ -91,9 +92,8 @@ def flipperMoveFinal(app):
 def timerFired(app):
     if app.gameOver: return
     ball.updateBall(app)
-    # opencv.finalSingularRed(app)
-    # opencv.finalSingularBlue(app)
-    # flipperMove(app)
+    opencv.finalSingularRed(app)
+    opencv.finalSingularBlue(app)
     flipperMoveFinal(app)
 
 def redrawAll(app, canvas):
