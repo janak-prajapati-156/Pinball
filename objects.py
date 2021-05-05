@@ -30,6 +30,9 @@ def initialisePoints(app):
             (playWidth*2.75/5, app.height*7.5/8), 
             (playWidth*7.25/9, app.height*7.26/8)]
     ]
+    # app.objectDict['triangularBox'] = [
+    #     [()]
+    # ]
     
 def flipper(app, canvas):
     for objectDraw in app.objectDict['flipper']:

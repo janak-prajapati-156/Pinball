@@ -23,7 +23,7 @@ def initialCV(app):
 
 def finalSingularBlue(app):
     test, image = app.testVid.read()
-    image = cv2.flip(image, 1)
+    # image = cv2.flip(image, 1)
     areaList = []
     hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
     lowBlue = np.array([110,50,50], np.uint8)
@@ -41,11 +41,11 @@ def finalSingularBlue(app):
         app.isBlue = True
     else:
         app.isBlue = False
-    cv2.imshow("output", image)
+    # cv2.imshow("output", image)
 
 def finalSingularRed(app):
     test, image = app.testVid.read()
-    image = cv2.flip(image, 1)
+    # image = cv2.flip(image, 1)
     areaList = []
     hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
     lowRed = np.array([136, 87, 111], np.uint8)
@@ -63,5 +63,5 @@ def finalSingularRed(app):
         app.isRed = True
     else:
         app.isRed = False
-    cv2.imshow("output", image)
+    # cv2.imshow("output", image)
 
