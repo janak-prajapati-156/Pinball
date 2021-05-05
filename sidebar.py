@@ -4,8 +4,7 @@ import ball
 
 def drawInstructions(app, canvas):
     playWidth = app.width*4.5/7
-    text = ["Press RETURN to enter username", 
-            "Press SPACEBAR to start", "Press 'r' to restart", 
+    text = ["Press SPACEBAR to start", "Press 'r' to restart", 
             "Press 'q' to quit game",
             "Use a BLUE object to move", 
             "the RIGHT flipper",

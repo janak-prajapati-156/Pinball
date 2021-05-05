@@ -32,6 +32,7 @@ def finalSingularBlue(app):
             app.isBlue = True
             return
     app.isBlue = False
+    # cv2.imshow("output", image)
 
 def finalSingularRed(app):
     test, image = app.testVid.read()
@@ -47,3 +48,15 @@ def finalSingularRed(app):
             return
     app.isRed = False
 
+"""
+A part of this code is editted from the code found @
+“Multiple Color Detection in Real-Time Using Python-OpenCV - GeeksforGeeks.” GeeksforGeeks, 24 Apr. 2020, www.geeksforgeeks.org/multiple-color-detection-in-real-time-using-python-opencv/. Accessed 20 Apr. 2021.
+
+“Python Programming Tutorials.” Pythonprogramming.net, 2021, pythonprogramming.net/morphological-transformation-python-opencv-tutorial/. Accessed 20 Apr. 2021.
+
+
+Canu, Sergio. “Detecting Colors (Hsv Color Space) - Opencv with Python - Pysource.” Pysource, 15 Feb. 2019, pysource.com/2019/02/15/detecting-colors-hsv-color-space-opencv-with-python/. Accessed 20 Apr. 2021.
+
+“YaflaColor RGB - HSV Color Conversion.” Archive.org, 2012, web.archive.org/web/20130806191424/www.yafla.com/yaflacolor/ColorRGBHSL.html. Accessed 20 Apr. 2021
+
+"""

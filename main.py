@@ -52,12 +52,13 @@ def keyReleased(app, event):
 def timerFired(app):
     if app.gameOver: return
     ball.updateBall(app)
-    # opencv.finalSingularRed(app)
-    # opencv.finalSingularBlue(app)
+    opencv.finalSingularRed(app)
+    opencv.finalSingularBlue(app)
     objects.flipperMoveFinal(app)
 
 def redrawAll(app, canvas):
     # canvas.create_image(900, 1500, image = ImageTk.PhotoImage(app.background))
+    playWidth = app.width*4.5/7
     objects.triangularBox(app, canvas)
     objects.sectionLine(app, canvas)
     objects.drawEdge(app, canvas)
@@ -68,5 +69,8 @@ def redrawAll(app, canvas):
     sidebar.drawScore(app, canvas)
     sidebar.highscores(app, canvas)
     ball.drawCircle(app, canvas)
+    if app.gameOver and app.spaceCount>0:
+        canvas.create_text((playWidth+app.width)/2, (app.height/2) + 20, 
+                        text = f"Game Over!", font = 'Helvetica 16')
 
 runApp(width=700, height=750)
