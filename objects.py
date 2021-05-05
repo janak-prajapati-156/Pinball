@@ -2,6 +2,11 @@ from cmu_112_graphics import *
 
 def initialisePoints(app):
     playWidth = app.width*4.5/7
+    app.oldH = app.height*6.66/8
+    app.newH = app.height*7.5/8
+    app.currH = app.height*6.66/8
+    app.currH2 = app.height*6.66/8
+    app.diffH = (app.newH-app.oldH)/20
     app.objectDict = {}
     app.objectDict['sectionLine'] = [[(playWidth, 0), 
                                     (playWidth, app.height)]]
@@ -66,6 +71,34 @@ def initialisePoints(app):
         (playWidth*3/4, app.height/2.25), (playWidth, app.height/2.25 - app.height/10)]
     ]
     
+def flipperMoveFinal(app):
+    playWidth = app.width*4.5/7
+    if not app.isBlue:
+        if app.currH<app.newH:
+            app.currH += app.diffH
+            app.objectDict['flipper'][1] = [(playWidth*7.25/9, app.height*7.08/8), 
+            (playWidth*2.75/5, app.currH), (playWidth*2.75/5, app.currH + app.height*.18/8),
+            (playWidth*7.15/9, app.height*7.26/8)]
+    else:
+        if app.currH>app.oldH:
+            app.currH -= app.diffH
+            app.objectDict['flipper'][1] = [(playWidth*7.25/9, app.height*7.08/8), 
+            (playWidth*2.75/5, app.currH), (playWidth*2.75/5, app.currH+ app.height*.18/8),
+            (playWidth*7.15/9, app.height*7.26/8)]
+
+    if not app.isRed:
+        if app.currH2<app.newH:
+            app.currH2 += app.diffH
+            app.objectDict['flipper'][0] = [(playWidth*1.75/9, app.height*7.08/8), 
+                (playWidth*2.25/5, app.currH2), (playWidth*2.25/5, app.currH2 + app.height*.18/8),
+                (playWidth*1.85/9, app.height*7.26/8)]
+    else:
+        if app.currH2>app.oldH:
+            app.currH2 -= app.diffH
+            app.objectDict['flipper'][0] = [(playWidth*1.75/9, app.height*7.08/8), 
+                (playWidth*2.25/5, app.currH2), (playWidth*2.25/5, app.currH2 + app.height*.18/8),
+                (playWidth*1.75/9, app.height*7.26/8)]
+
 def flipper(app, canvas):
     for objectDraw in app.objectDict['flipper']:
         canvas.create_polygon(objectDraw, fill = 'brown')

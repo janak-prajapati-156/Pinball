@@ -14,7 +14,7 @@ def initialConditions(app):
     app.r = 6
     app.x0 = playWidth/2
     app.y0 = app.height/2
-    app.vi = 5 # initial velocity
+    app.vi = 4 # initial velocity
     app.angle = math.radians(80)
     app.yVel = app.vi * math.sin(app.angle)
     app.xVel = app.vi * math.cos(app.angle)
