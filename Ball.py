@@ -15,7 +15,7 @@ def initialConditions(app):
     app.x0 = playWidth/2
     app.y0 = app.height/2
     app.vi = 5 # initial velocity
-    app.angle = math.radians(-45)
+    app.angle = math.radians(80)
     app.yVel = app.vi * math.sin(app.angle)
     app.xVel = app.vi * math.cos(app.angle)
     app.dx = 0
@@ -24,17 +24,6 @@ def initialConditions(app):
     app.coeff_restitution = 0.94 # "bounciness" after a collision
     app.ballPos = [(playWidth/2, app.height/2)]
     app.score = 0
-    # app.objectList = []
-    # app.triPos = [(150, 100), (250, 220), (50, 160)]
-    # app.paraPos = [(500, 100), (550, 150), (500, 200), (450, 150)]
-    # app.rectPos = [(400, 400), (450, 400), (450, 440), (400, 440)]
-    # app.objectList.append(app.triPos)
-    # app.objectList.append(app.paraPos)
-    # app.objectList.append(app.rectPos)
-
-# def keyPressed(app, event):
-#     if event.key=='x':
-#         doStep(app)
     
 def updateBall(app):
     doStep(app)

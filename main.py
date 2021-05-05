@@ -10,6 +10,12 @@ def startGame(app):
     ball.initialConditions(app)
     opencv.initialCV(app)
     app.timerDelay = 1
+    app.oldH = app.height*6.66/8
+    app.newH = app.height*7.5/8
+    app.currH = app.height*6.66/8
+    app.currH2 = app.height*6.66/8
+    app.diffH = (app.newH-app.oldH)/15
+    app.iterateH = np.linspace(app.height*6.66/8, app.height*7.26/8, num=50)
 
 def appStopped(app):
     app.testVid.release()
@@ -34,24 +40,52 @@ def keyReleased(app, event):
     if event.key=='d' or event.key=="Right":
         app.isBlue = False
 
-def flipperMove(app):
+def flipperMoveFinal(app):
     playWidth = app.width*4.5/7
-    if app.isBlue:
-        app.objectDict['flipper'][1] = [(playWidth*7.25/9, app.height*7.08/8), 
-            (playWidth*2.75/5, app.height*6.66/8), 
+    if not app.isBlue:
+        if app.currH<app.newH:
+            app.currH += app.diffH
+            app.objectDict['flipper'][1] = [(playWidth*7.25/9, app.height*7.08/8), 
+            (playWidth*2.75/5, app.currH), 
             (playWidth*7.15/9, app.height*7.26/8)]
     else:
-        app.objectDict['flipper'][1] = [(playWidth*7.25/9, app.height*7.08/8), 
-            (playWidth*2.75/5, app.height*7.5/8), 
-            (playWidth*7.25/9, app.height*7.26/8)]
-    if app.isRed:
-        app.objectDict['flipper'][0] = [(playWidth*1.75/9, app.height*7.08/8), 
-            (playWidth*2.25/5, app.height*6.66/8), 
-            (playWidth*1.85/9, app.height*7.26/8)]
+        if app.currH>app.oldH:
+            app.currH -= app.diffH
+            app.objectDict['flipper'][1] = [(playWidth*7.25/9, app.height*7.08/8), 
+            (playWidth*2.75/5, app.currH), 
+            (playWidth*7.15/9, app.height*7.26/8)]
+
+    if not app.isRed:
+        if app.currH2<app.newH:
+            app.currH2 += app.diffH
+            app.objectDict['flipper'][0] = [(playWidth*1.75/9, app.height*7.08/8), 
+                (playWidth*2.25/5, app.currH2), 
+                (playWidth*1.85/9, app.height*7.26/8)]
     else:
-        app.objectDict['flipper'][0] = [(playWidth*1.75/9, app.height*7.08/8), 
-            (playWidth*2.25/5, app.height*7.5/8), 
-            (playWidth*1.75/9, app.height*7.26/8)]
+        if app.currH2>app.oldH:
+            app.currH2 -= app.diffH
+            app.objectDict['flipper'][0] = [(playWidth*1.75/9, app.height*7.08/8), 
+                (playWidth*2.25/5, app.currH2), 
+                (playWidth*1.75/9, app.height*7.26/8)]
+
+# def flipperMove(app):
+#     playWidth = app.width*4.5/7
+#     if app.isBlue:
+#         app.objectDict['flipper'][1] = [(playWidth*7.25/9, app.height*7.08/8), 
+#             (playWidth*2.75/5, app.height*6.66/8), 
+#             (playWidth*7.15/9, app.height*7.26/8)]
+#     else:
+#         app.objectDict['flipper'][1] = [(playWidth*7.25/9, app.height*7.08/8), 
+#             (playWidth*2.75/5, app.height*7.5/8), 
+#             (playWidth*7.25/9, app.height*7.26/8)]
+#     if app.isRed:
+#         app.objectDict['flipper'][0] = [(playWidth*1.75/9, app.height*7.08/8), 
+#             (playWidth*2.25/5, app.height*6.66/8), 
+#             (playWidth*1.85/9, app.height*7.26/8)]
+#     else:
+#         app.objectDict['flipper'][0] = [(playWidth*1.75/9, app.height*7.08/8), 
+#             (playWidth*2.25/5, app.height*7.5/8), 
+#             (playWidth*1.75/9, app.height*7.26/8)]
 
 
 def timerFired(app):
@@ -59,13 +93,16 @@ def timerFired(app):
     ball.updateBall(app)
     # opencv.finalSingularRed(app)
     # opencv.finalSingularBlue(app)
-    flipperMove(app)
+    # flipperMove(app)
+    flipperMoveFinal(app)
 
 def redrawAll(app, canvas):
     objects.triangularBox(app, canvas)
     objects.sectionLine(app, canvas)
     objects.drawEdge(app, canvas)
     objects.flipper(app, canvas)
+    objects.rhombus(app, canvas)
+    objects.parallelogram(app, canvas)
     sidebar.drawInstructions(app, canvas)
     sidebar.drawScore(app, canvas)
     ball.drawCircle(app, canvas)
